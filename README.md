@@ -1,3 +1,13 @@
+> **本分支是第三方分支，与 Google 官方无关。**
+>
+> `zhihulite` 分支在上游基线上额外支持了预测性返回动画（predictive back）及性能优化，
+> 实现鸣谢 [@ZL114514](https://github.com/ZL114514)。
+> 制品发布在 [zhihulite/maven-repository](https://github.com/zhihulite/maven-repository)。
+>
+> 改动说明、引入方式以及**如何换回官方版本**见 **[FORK.md](FORK.md)**。
+>
+> 以下是上游原始 README。
+
 [![Chat](https://img.shields.io/discord/259087343246508035.svg)](https://discord.gg/material-components)
 
 # [MAINTENANCE MODE] Material Components for Android

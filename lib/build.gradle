@@ -169,8 +169,11 @@ publishing {
         description = 'Material Components for Android is a static library ' +
           'that you can add to your Android application in order to use ' +
           'APIs that provide implementations of the Material Design specification. ' +
-          'Compatible on devices running API 23 or later.'
-        url = 'https://github.com/material-components/material-components-android'
+          'Compatible on devices running API 23 or later. ' +
+          'This is a fork with local modifications; upstream never published ' +
+          'this version number.'
+        // 指向 fork 而非上游：本制品含本地改动，使用者顺着上游 URL 找不到对应源码。
+        url = 'https://github.com/zhihulite/material-components-android'
         inceptionYear = '2015'
         licenses {
           license {
@@ -185,8 +188,8 @@ publishing {
           }
         }
         scm {
-          connection = 'scm:git:https://github.com/material-components/material-components-android.git'
-          url = 'https://github.com/material-components/material-components-android'
+          connection = 'scm:git:https://github.com/zhihulite/material-components-android.git'
+          url = 'https://github.com/zhihulite/material-components-android'
         }
       }
 

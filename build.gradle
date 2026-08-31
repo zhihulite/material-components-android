@@ -25,8 +25,13 @@ ext {
   // required for the doclava dependency.
   usePrebuilts = "true"
 
+  // 默认发布到 zhihulite/maven-repository 的本地工作副本（与本仓库并排 clone）。
+  // 上游默认值是 /tmp/myRepo/，在 Windows 上会落到盘符根的 tmp 目录，
+  // 且不带 releases/snapshots 分区。
+  // 换位置或在 CI 上用 -PmavenRepoUrl=<路径> 覆盖。
   mavenRepoUrl = (project.hasProperty('mavenRepoUrl')
-    ? project.property('mavenRepoUrl') : '/tmp/myRepo/')
+    ? project.property('mavenRepoUrl')
+    : new File(rootDir, '../maven-repository/repository/releases').canonicalPath)
 
   // Current version of the library (could be in-development/unreleased).
   mdcLibraryVersion = '1.14.0'

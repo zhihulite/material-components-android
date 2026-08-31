@@ -22,6 +22,7 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.core.util.Preconditions.checkNotNull;
 import static com.google.android.material.transition.TransitionUtils.calculateArea;
 import static com.google.android.material.transition.TransitionUtils.convertToRelativeCornerSizes;
+import static com.google.android.material.transition.TransitionUtils.copyViewImage;
 import static com.google.android.material.transition.TransitionUtils.createColorShader;
 import static com.google.android.material.transition.TransitionUtils.defaultIfNull;
 import static com.google.android.material.transition.TransitionUtils.findAncestorById;
@@ -32,6 +33,7 @@ import static com.google.android.material.transition.TransitionUtils.lerp;
 import static com.google.android.material.transition.TransitionUtils.transform;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
@@ -877,6 +879,13 @@ public final class MaterialContainerTransform extends Transition {
     return transitionShapeAppearanceResId;
   }
 
+  private static View maybeGetViewImageCopy(ViewGroup sceneRoot, View view) {
+    if (view.getParent() instanceof View) {
+      return copyViewImage(sceneRoot, view, (View) view.getParent());
+    }
+    return view;
+  }
+
   @Nullable
   @Override
   public Animator createAnimator(
@@ -935,11 +944,11 @@ public final class MaterialContainerTransform extends Transition {
     final TransitionDrawable transitionDrawable =
         new TransitionDrawable(
             getPathMotion(),
-            startView,
+            maybeGetViewImageCopy(sceneRoot, startView),
             startBounds,
             startShapeAppearanceModel,
             getElevationOrDefault(startElevation, startView),
-            endView,
+            maybeGetViewImageCopy(sceneRoot, endView),
             endBounds,
             endShapeAppearanceModel,
             getElevationOrDefault(endElevation, endView),
@@ -970,10 +979,10 @@ public final class MaterialContainerTransform extends Transition {
           }
         });
 
-    addListener(
-        new TransitionListenerAdapter() {
+    animator.addListener(
+        new AnimatorListenerAdapter() {
           @Override
-          public void onTransitionStart(@NonNull Transition transition) {
+          public void onAnimationStart(@NonNull Animator animation) {
             // Add the transition drawable to the root ViewOverlay
             drawingView.getOverlay().add(transitionDrawable);
 
@@ -983,8 +992,8 @@ public final class MaterialContainerTransform extends Transition {
           }
 
           @Override
-          public void onTransitionEnd(@NonNull Transition transition) {
-            removeListener(this);
+          public void onAnimationEnd(@NonNull Animator animation) {
+            animator.removeListener(this);
             if (holdAtEndEnabled) {
               // Keep drawable showing and views hidden (useful for Activity return transitions)
               return;
@@ -1570,5 +1579,10 @@ public final class MaterialContainerTransform extends Transition {
       this.scaleMask = scaleMask;
       this.shapeMask = shapeMask;
     }
+  }
+
+  @Override
+  public boolean isSeekingSupported() {
+    return true;
   }
 }
